@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap");
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+@import "./sass/variable";
+@import "./sass/home";
+@import "./sass/login";
+@import "./sass/message";
+
+* {
+  font-family: "Nunito", sans-serif;
+  overflow-x: hidden;
+}
+.logo {
+  font-weight: bolder;
+  color: $blue;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 10px 0;
+}
