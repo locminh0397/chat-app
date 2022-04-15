@@ -18,12 +18,8 @@ function Sidebar() {
     setCurrentRoom,
     members,
     setMembers,
-    message,
-    setMessage,
     privateMemberMsg,
     setPrivateMemberMsg,
-    newMessages,
-    setNewMessages,
   } = useContext(AppContext);
 
   socket.off("new-user").on("new-user", (payload) => {
@@ -36,6 +32,7 @@ function Sidebar() {
       socket.emit("join-room", "general");
       socket.emit("new-user");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const joinRoom = (room, isPulic = "true") => {
