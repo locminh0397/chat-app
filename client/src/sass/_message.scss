@@ -1,4 +1,32 @@
-.message-output{
+.message-output {
   height: 80vh;
   border: 1px solid lightgray;
+  overflow-y: scroll;
+}
+.message {
+  display: flex;
+  justify-content: flex-end;
+  &-inner {
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    min-width: 200px;
+    max-width: 90%;
+    text-align: left;
+    min-height: 80px;
+    font-weight: 400;
+    font-size: 16px;
+    border-radius: 10px;
+    background: $blue;
+    color: white;
+  }
+}
+.incoming {
+  display: flex;
+  justify-content: flex-start;
+  .message-inner {
+    color: black;
+    background-color: #ccc;
+  }
 }

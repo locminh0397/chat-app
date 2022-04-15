@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import avatar from "../images/avatar.png";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { ToastContainer, toast } from "react-toastify";
-
+import { useRegisterMutation } from "../services/api";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -14,7 +14,8 @@ function Signup() {
     confirmPassword: "",
   });
 
-  const [image, setImage] = useState(null);
+  const [register, { isLoading, error }] = useRegisterMutation();
+  const [image, setImage] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
 
   const handleChangeValue = (e) => {
@@ -38,6 +39,10 @@ function Signup() {
       console.log(error);
     }
   };
+  const clear = () => {
+    setImage(null);
+    setFormData({ username: "", email: "", password: "", confirmPassword: "" });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { username, email, password, confirmPassword } = formData;
@@ -47,17 +52,26 @@ function Signup() {
     );
     if (!username || !email || !password || !confirmPassword) {
       toast.error("All field is required!");
-    }
-    if (!emailValidate) {
+    } else if (!emailValidate) {
       toast.error("Email is invalid!");
-    }
-    if (password !== confirmPassword) {
+    } else if (password !== confirmPassword) {
       toast.error("Password doesn't match!");
-    }
-    if (!image) {
+    } else if (!image) {
       toast.error("Please upload your profile picture");
+    } else {
+      try {
+        const url = await uploadImage(image);
+        const res = await register({ username, password, email, picture: url });
+        if (res.data.success === true) {
+          toast.success(res.data.msg);
+          clear();
+        } else {
+          toast.error(res.data.msg);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
-    const url = await uploadImage(image);
   };
 
   const valiadeImage = (e) => {
@@ -100,6 +114,7 @@ function Signup() {
               <Form.Control
                 type="text"
                 name="username"
+                value={formData.username}
                 placeholder="Enter username"
                 onChange={handleChangeValue}
               />
@@ -109,6 +124,7 @@ function Signup() {
               <Form.Control
                 type="email"
                 name="email"
+                value={formData.email}
                 placeholder="Enter email"
                 onChange={handleChangeValue}
               />
@@ -119,6 +135,7 @@ function Signup() {
               <Form.Control
                 type="password"
                 name="password"
+                value={formData.password}
                 placeholder="Password"
                 autoComplete="off"
                 onChange={handleChangeValue}
@@ -129,6 +146,7 @@ function Signup() {
               <Form.Control
                 type="password"
                 name="confirmPassword"
+                value={formData.confirmPassword}
                 placeholder="Confirm password"
                 autoComplete="off"
                 onChange={handleChangeValue}
@@ -141,6 +159,9 @@ function Signup() {
             </div>
             <Button variant="primary" type="submit">
               Sign up
+            </Button>
+            <Button variant="primary" onClick={clear}>
+              clear
             </Button>
           </Form>
         </Col>

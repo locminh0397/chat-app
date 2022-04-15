@@ -13,10 +13,11 @@ $grid-breakpoints: (
 @import "./sass/home";
 @import "./sass/login";
 @import "./sass/message";
+@import "./sass/navbar";
+@import "./sass/sidebar";
 
 * {
   font-family: "Nunito", sans-serif;
-  overflow-x: hidden;
 }
 .logo {
   font-weight: bolder;

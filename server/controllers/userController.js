@@ -4,7 +4,6 @@ import bcryptjs from "bcryptjs";
 export const Register = async (req, res) => {
   try {
     const { username, email, password, picture } = req.body;
-    console.log(req.body);
 
     const userCheck = await Users.findOne({ username });
     if (userCheck)
@@ -46,7 +45,8 @@ export const Login = async (req, res) => {
         msg: "Username or password incorrect!",
         success: false,
       });
-
+    await Users.findByIdAndUpdate({_id: user._id}, {status: "on"})
+    console.log(user)
     res.status(200).json({ msg: "Login successfully!", success: true, user });
   } catch (error) {
     res.status(400).json({ msg: error.message, success: false });

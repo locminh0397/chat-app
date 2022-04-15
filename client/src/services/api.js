@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3001/api/v1",
+    baseUrl: "https://api-chatapp0315.herokuapp.com/api/v1",
   }),
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -22,7 +22,7 @@ const api = createApi({
     }),
     logout: builder.mutation({
       query: (payload) => ({
-        url: "/user/logout",
+        url: "/logout",
         method: "DELETE",
         body: payload,
       }),

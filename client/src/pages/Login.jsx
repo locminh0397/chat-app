@@ -1,26 +1,42 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { VscAccount } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../services/api";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/appContext";
 
 function Login() {
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
-
+  const { socket } = useContext(AppContext);
+  const navigate = useNavigate();
+  const [login] = useLoginMutation();
   const handleChangeValue = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    const {email, password} = formData
-    if(!email || !password){
-      toast.error("All field is required!")
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { username, password } = formData;
+    if (!username || !password) {
+      toast.error("All field is required!");
     }
-  }
+    try {
+      const res = await login(formData);
+      if (res.data.success === true) {
+        socket.emit("new-user");
+        navigate("/chat");
+      } else {
+        toast.error(res.data.msg);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Container>
       <Row>
@@ -36,16 +52,13 @@ function Login() {
               <VscAccount fontSize={50} />
             </div>
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
+              <Form.Label>Username</Form.Label>
               <Form.Control
-                type="email"
-                placeholder="Enter email"
-                name="email"
+                type="text"
+                placeholder="Enter username"
+                name="username"
                 onChange={handleChangeValue}
               />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -68,7 +81,7 @@ function Login() {
           </Form>
         </Col>
       </Row>
-      <ToastContainer/>
+      <ToastContainer />
     </Container>
   );
 }

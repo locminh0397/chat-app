@@ -1,12 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import api from "../services/api";
 
 export const userSlice = createSlice({
   name: "user",
   initialState: null,
   reducers: {
-    addNotification: (state, { payload }) => {},
-    resetNotification: (state, { payload }) => {},
+    addNotification: (state, { payload }) => {
+      if (state.user.newMessage[payload]) {
+        state.user.newMessage[payload] = state.user.newMessage[payload] + 1;
+      } else {
+        state.user.newMessage[payload] = 1;
+      }
+      console.log(current(state));
+    },
+    resetNotification: (state, { payload }) => {
+      delete state.user.newMessage[payload];
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
